@@ -4,6 +4,7 @@ plugins {
     id("com.android.library")
     id("com.diffplug.spotless") version "6.11.0"
     id("kotlin-parcelize")
+    id("com.google.osdetector") version "1.7.1"
 }
 spotless {
     kotlin {
@@ -65,6 +66,24 @@ kotlin {
         named("desktopMain") {
             dependencies {
                 implementation(compose.desktop.common)
+                //https://stackoverflow.com/questions/73187027/use-javafx-in-kotlin-multiplatform
+                // As JavaFX have platform-specific dependencies, we need to add them manually
+                val fxSuffix = when (osdetector.classifier) {
+                    "linux-x86_64" -> "linux"
+                    "linux-aarch_64" -> "linux-aarch64"
+                    "windows-x86_64" -> "win"
+                    "osx-x86_64" -> "mac"
+                    "osx-aarch_64" -> "mac-aarch64"
+                    else -> throw IllegalStateException("Unknown OS: ${osdetector.classifier}")
+                }
+
+                // Replace "compileOnly" with "implementation" for a non-library project
+                implementation("org.openjfx:javafx-base:18.0.2:${fxSuffix}")
+                implementation("org.openjfx:javafx-graphics:18.0.2:${fxSuffix}")
+                implementation("org.openjfx:javafx-controls:18.0.2:${fxSuffix}")
+                implementation("org.openjfx:javafx-web:18.0.2:${fxSuffix}")
+                implementation("org.openjfx:javafx-swing:18.0.2:${fxSuffix}")
+                implementation("org.openjfx:javafx-media:18.0.2:${fxSuffix}")
             }
         }
     }

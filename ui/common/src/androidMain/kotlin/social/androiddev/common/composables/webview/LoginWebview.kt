@@ -1,0 +1,37 @@
+/*
+ * This file is part of Dodo.
+ *
+ * Dodo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * Dodo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with Dodo. If not, see <https://www.gnu.org/licenses/>.
+ */
+package social.androiddev.common.composables.webview
+
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
+
+@Composable
+actual fun SignInSignUpWebView(
+    url: String,
+    onSuccess: (code: String) -> Unit,
+    onFailure: (error: String) -> Unit
+) {
+
+    AndroidView(
+        factory = {
+            WebView(it).apply {
+                webViewClient = WebViewClient()
+                settings.javaScriptEnabled = true
+
+                loadUrl(url)
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+}
